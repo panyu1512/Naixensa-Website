@@ -7,7 +7,8 @@ import {
 	NavbarBrand,
 	NavbarItem,
 } from "@nextui-org/navbar";
-import { ModalAuth } from "./modalAuth";
+import { ModalLogin } from "./modalLogin";
+import { ModalRegister } from "./modalRegister";
 import {useDisclosure} from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import NextLink from "next/link";
@@ -22,6 +23,18 @@ import { logoName } from "@/components/primitives";
 export const Navbar = () => {
 
 	const {isOpen, onOpen, onOpenChange} = useDisclosure();
+	const [isRegister, setIsRegister] = React.useState(false);
+	const [isLogin, setIsLogin] = React.useState(false);
+
+	const toggleLogin = () => {
+		setIsLogin(true);
+		setIsRegister(false);
+	}
+	
+	const toggleRegister = () => {
+		setIsRegister(true);
+		setIsLogin(false);
+	}
 
 	return (
 		<NextUINavbar maxWidth="xl" position="sticky">
@@ -45,6 +58,7 @@ export const Navbar = () => {
 						onPress={onOpen}
 						className="text-sm font-normal text-default-600 bg-default-100"
 						variant="flat"
+						onClick={toggleLogin}
 					>
 						Iniciar sessió
 					</Button>
@@ -53,10 +67,11 @@ export const Navbar = () => {
 						color="secondary"
 						className="text-sm font-normal"
 						variant="shadow"
+						onClick={toggleRegister}
 					>
 						Registrarse
 					</Button>
-					<ModalAuth isOpen={isOpen} onOpenChange={onOpenChange} size="2xl" placement="center"/>
+					{isRegister ? <ModalRegister isOpen={isOpen} onOpenChange={onOpenChange} size="2xl" placement="center" /> : <ModalLogin isOpen={isOpen} onOpenChange={onOpenChange} size="2xl" placement="center" /> }
 				</NavbarItem>
 			</NavbarContent>
 
