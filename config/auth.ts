@@ -12,7 +12,7 @@ type Actions = {
     logout: () => void;
 };
 
-export const useAuthStore = create(
+export const useAuth = create(
     persist<State & Actions>(
         (set) => ({
             access: '',
