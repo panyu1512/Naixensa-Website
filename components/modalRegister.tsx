@@ -1,3 +1,4 @@
+'use client';
 import {
   Modal,
   ModalContent,
@@ -10,6 +11,11 @@ import { Input } from "@nextui-org/react";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
 import { Divider } from "@nextui-org/react";
 import React from "react";
+import toast, { Toaster } from 'react-hot-toast';
+import { registerRequest } from "@/api/users";
+import { useAuth } from "@/config/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from 'next/router'
 interface modalAuthProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
@@ -36,11 +42,36 @@ interface modalAuthProps {
 }
 
 export const ModalRegister = (props: modalAuthProps) => {
+  const { isAuth } = useAuth();
+
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const [email, setEmail] = React.useState("");
+
   const [label, setLabel] = React.useState("Email");
+
+  const [email, setEmail] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [last_name, setLastName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
   const validateEmail = (value: string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+
+  const registerMutation = useMutation({
+    mutationFn: () => registerRequest(email, name, last_name, password),
+    onSuccess: () => {
+      toast.success("Registrat correctament");
+    },
+    onError: () => {
+      toast.error("Error al registrar-te")
+    },
+  });
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    registerMutation.mutate()
+
+  }
+    
 
   const isInvalid = React.useMemo(() => {
     if (email === "") return false;
@@ -71,7 +102,7 @@ export const ModalRegister = (props: modalAuthProps) => {
             </ModalHeader>
             <Divider />
             <ModalBody>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <Input
                   className="max-w-xs py-2"
                   variant="bordered"

@@ -1,6 +1,6 @@
 import axios, { AxiosRequestHeaders } from "axios";
 import { useAuth } from "@/config/auth";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { Token } from "@/app/interfaces";
 
 function logout() {
@@ -25,7 +25,7 @@ authAxios.interceptors.request.use(async (config) => {
         Authorization: `Bearer ${token}`,
     } as AxiosRequestHeaders;
 
-    const tokenDecoded: Token = jwt_decode(token)
+    const tokenDecoded: Token = jwtDecode(token)
 
     const expiration = new Date(tokenDecoded.exp * 1000);
     const now = new Date();
